@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Hotel</title>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/animate.css}">
+    <script th:src="@{/css/js/wow.min.js}"></script>
+    <script>
+        new WOW().init();
+    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://unpkg.com/gijgo@1.9.11/js/gijgo.min.js" type="text/javascript"></script>
+    <link href="https://unpkg.com/gijgo@1.9.11/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/lightpick.css}">
+    <link rel="stylesheet" th:href="@{/css/fontawesome.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+
+</head>
+<body>
+
+<div class="backLayer">
+
+    <div>
+        <h1 class="title wow slideInDown" style="text-align: center">
+            <div>
+                <form style="width: 40px; margin-right: 0px; display: inline-block; padding: 10px;" th:if="${user != null}" th:action="@{/logout}" method="post">
+                    <input style="width: 40px; height: 40px" type="image" name="submit" th:src="@{/css/img/exit.png}">
+                </form>
+                <span>Welcome to St. Ermin's Hotel</span>
+                <a th:if="${user} == null" th:href="@{/login}"><img style="width: 40px; margin-bottom: 22px" th:src="@{/css/img/login.png}"></a>
+                <a th:if="${user} != null" th:href="@{/personalArea}"><img style="width: 40px; margin-bottom: 22px" th:src="@{/css/img/user.png}"></a>
+                <a th:if="${user} != null and ${userAuthorities}" th:href="@{/admin/addEntity}"><img style="width: 40px;  margin-bottom: 22px" th:src="@{/css/img/admin.png}"></a>
+            </div>
+        </h1>
+
+    </div>
+    <form class="headForm" th:action="@{/getFilteredRooms}" method="get">
+
+        <div class="dateInput">
+            <span class="input-group-text" id="inputGroup-sizing-default">Check_in</span>
+            <input id="datepicker1" name="checkInDate" width="276"/>
+
+            <span class="input-group-text" id="inputGroup-sizing-default">Check_Out</span>
+            <input id="datepicker2" name="checkOutDate" width="276"/>
+
+
+            <script>
+                $('#datepicker1').datepicker({
+                    uiLibrary: 'bootstrap4'
+                });
+            </script>
+            <script>
+                $('#datepicker2').datepicker({
+                    uiLibrary: 'bootstrap4'
+                });
+            </script>
+
+            <script>
+                current_date = new Date();
+                month = current_date.getMonth() + 1;
+                day = current_date.getDate();
+                year = current_date.getFullYear();
+
+                if (day < 10) {
+                    day = "0" + day;
+                }
+
+                if (month < 10) {
+                    month = "0" + month;
+                }
+
+                datepicker1.value = month + "/" + day + "/" + year;
+
+                datepicker2.value = month + "/" + day + "/" + year;
+            </script>
+
+        </div>
+
+        <div class="addData">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Guests</span>
+                </div>
+
+                <input type="number" name="seatsAmount" min="1" value="1" max="6" class="form-control"
+                       aria-label="Default" aria-describedby="inputGroup-sizing-default">
+            </div>
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">Price</span>
+                </div>
+                <input type="number" name="dayCost" min="30" value="30" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
+                <span class="input-group-text" id="inputGroup-sizing-default">$</span>
+            </div>
+        </div>
+
+        <div class="formBtn">
+            <button type="submit" class="btn btn-secondary" name="action" value="search">Search</button>
+        </div>
+    </form>
+
+    <form action="HotelMainServlet">
+        <div class="infoConteiner">
+            <div class="all_rooms_info">
+                <h5>Hotel Rooms</h5>
+                <p>Spend your time with comfort</p>
+                <p>
+                <ul>
+                    <li>Balcony</li>
+                    <li>Kitchen</li>
+                    <li>Smart Furniture</li>
+                    <li>Personal Library</li>
+                    <li>Mini garden</li>
+                </ul>
+                </p>
+                <div class="wow jello">
+                    <a th:href="@{/rooms}"><button class="btn btn-info more_info_btn" type="button">See more about rooms</button></a>
+                </div>
+            </div>
+
+            <div class="relax_info">
+                <h5>Leisure and Entertainment</h5>
+                <p>Unlimited relaxation</p>
+                <p>
+                <ul>
+                    <li>Swimming pools</li>
+                    <li>Tennis court</li>
+                    <li>Volleyball court</li>
+                    <li>Spa and Massage</li>
+                    <li>Billiard room</li>
+                </ul>
+                </p>
+                <div>
+                    <a th:href="@{/leisure}"><button class="btn btn-info more_info_btn" type="button" >See more leisure</button></a>
+                </div>
+            </div>
+
+            <div class="facilities">
+                <h5 class="wow rubberBand">Facilities</h5>
+                <p>Highest amenities</p>
+                <p>
+                <ul>
+                    <li>Parking</li>
+                    <li>Free wi-fi</li>
+                    <li>Airport transfer</li>
+                    <li>Round-the-clock bar</li>
+                    <li>Breakfast in room</li>
+                </ul>
+                </p>
+                <div>
+                    <a th:href="@{/facilities}"><button class="btn btn-info more_info_btn" type="button" >See more facilities</button></a>
+                </div>
+            </div>
+        </div>
+    </form>
+    <br/>
+    <br/>
+    <br/>
+    <!--    <table width="100%" cellspacing="0" style="background-color: #8E064B; opacity: 0.8; color: white">-->
+    <table>
+        <tr>
+            <td>
+                <div class="container">
+                    <h6 class="wow rubberBand">Contacts</h6>
+                    <p class="contact"><b>phone:</b> +44 20 7222 7888<br/>
+                        <b>email:</b> hotel@gmail.com<br/>
+                        <b>address:</b> Miami, FL 33132, USA
+                    </p>
+                </div>
+            </td>
+            <td>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1864.670151430143!2d-80.18643721726593!3d25.77778855937533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88d9b4206607af1b%3A0x4154ff5e01705f30!2z0JTQsNGD0L3RgtCw0YPQvSDQnNCw0LnQsNC80LgsINCc0LDQudCw0LzQuCwg0KTQu9C-0YDQuNC00LAgMzMxMzIsINCh0KjQkA!5e0!3m2!1sru!2sby!4v1589297826990!5m2!1sru!2sby"
+                        width="950" height="400" frameborder="0" style="border:0; margin-top: 50px"
+                        allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
+
